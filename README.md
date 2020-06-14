@@ -144,8 +144,12 @@ $addcaarecord = New-AzDnsRecordSet -Name "@" -RecordType CAA -ZoneName $zoneName
 4.1 Deploy the Kubernentes Files
     
 kubectl apply --namespace default -f "01webandsql.yaml"
+
 kubectl apply --namespace default -f "02clusterIsuer.yaml"
+
 kubectl apply --namespace default -f "03Ingress.yaml"
+
+kubectl apply --namespace default -f "04Certificate.yaml"
 
 
 5. Test The Web Application and view the results
