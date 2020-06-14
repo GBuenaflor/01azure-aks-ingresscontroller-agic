@@ -11,7 +11,7 @@ Configuration Flow :
 1. Create new AKS Cluster (with Advance Networking) and ApplicationGateway (using Azure Terraform)
     
 
-2. Create new DNS Zone
+2. Create new DNS Zone , edit GoDaddy nameserver (assume you have Domain registered in Godaddy) to utilize Azure Name Servers 
 
 ------------------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ az network dns zone show \
 
 3. Install Azure AD Pod Identity
 
-----------------------------------------------------------
+------------------------------------------------------------------------------
  
 - Check RBAC -Enabled in the AKS Cluster?
 
@@ -43,19 +43,21 @@ az resource show --resource-group "Dev01-APIG-RG" --name az-k8s --resource-type 
 
 kubectl create -f https://raw.githubusercontent.com/Azure/aad-pod-identity/master/deploy/infra/deployment.yaml
   
-----------------------------------------------------------
+------------------------------------------------------------------------------
 
-3.1 Install Helm and Install AGIC using Helm
+3.1 Install Helm then install AGIC
 
-----------------------------------------------------------
+------------------------------------------------------------------------------
 
 - Install Helm, If RBAC is disabled
+
 helm init
 
 
 - Add the AGIC Helm repository
 
 helm repo add application-gateway-kubernetes-ingress https://appgwingress.blob.core.windows.net/ingress-azure-helm-package/
+
 helm repo update
 
 - Install Ingress Controller Helm Chart ,download helm-config.yaml to configure AGIC:
@@ -67,20 +69,19 @@ wget https://raw.githubusercontent.com/Azure/application-gateway-kubernetes-ingr
 
 code helm-config.yaml
 
-----------------------------------------------------------
+------------------------------------------------------------------------------
     
 3.2 Install the Application Gateway ingress controller package:
 
-
-----------------------------------------------------------
+------------------------------------------------------------------------------
  
 helm install -f helm-config.yaml application-gateway-kubernetes-ingress/ingress-azure --generate-name
 
-----------------------------------------------------------
+------------------------------------------------------------------------------
 
-3.3 Configure Cert Manager
+3.3 Configure Cert Manager , this is the magic part
 
-----------------------------------------------------------
+------------------------------------------------------------------------------
    
 kubectl create namespace cert-manager
 
@@ -97,11 +98,11 @@ helm install cert-manager \
 
 kubectl get pods --namespace cert-manager
 
-----------------------------------------------------------
+------------------------------------------------------------------------------
 
 3.4 Add new A Record in new DNS Zone , Get the Application Gateway Public IP
 
-----------------------------------------------------------
+------------------------------------------------------------------------------
 
 az network dns record-set a add-record \
     --resource-group Dev01-RG \
@@ -109,12 +110,11 @@ az network dns record-set a add-record \
     --record-set-name '*' \
     --ipv4-address 52.224.130.28
 
-----------------------------------------------------------
+------------------------------------------------------------------------------
 
 3.5 Add CAA  Certificate Authority Authentication using Power Shell
 
-
-----------------------------------------------------------
+------------------------------------------------------------------------------
 
 $zoneName="aks01-web.domain.net"
 
@@ -128,14 +128,14 @@ $addcaarecord+=New-AzDnsRecordConfig -Caaflags 0 -CaaTag "iodef" -CaaValue "<you
     
 $addcaarecord = New-AzDnsRecordSet -Name "@" -RecordType CAA -ZoneName $zoneName -ResourceGroupName $resourcegroup -Ttl 3600 -DnsRecords ($addcaarecord)
  
-----------------------------------------------------------
+------------------------------------------------------------------------------
 
 4. Configure Cert-Manager using Azure DNS , this will be use in 02clusterIsuer.yaml file
 
    https://cert-manager.io/docs/configuration/acme/dns01/azuredns/
 
 
-4.1 Deploy the Kubernentes Files
+4.1 Deploy the Kubernentes Files in order
     
 kubectl apply --namespace default -f "01webandsql.yaml"
 
