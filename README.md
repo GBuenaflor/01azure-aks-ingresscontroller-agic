@@ -35,10 +35,12 @@ az network dns zone show \
 ----------------------------------------------------------
  
 - Check RBAC -Enabled in the AKS Cluster?
+
 az resource show --resource-group "Dev01-APIG-RG" --name az-k8s --resource-type Microsoft.ContainerService/ManagedClusters --query properties.enableRBAC
  
  
 - Install Azure AD Pod Identity,  If RBAC is disabled
+
 kubectl create -f https://raw.githubusercontent.com/Azure/aad-pod-identity/master/deploy/infra/deployment.yaml
   
 ----------------------------------------------------------
@@ -52,16 +54,19 @@ helm init
 
 
 - Add the AGIC Helm repository
+
 helm repo add application-gateway-kubernetes-ingress https://appgwingress.blob.core.windows.net/ingress-azure-helm-package/
 helm repo update
 
 - Install Ingress Controller Helm Chart
 
 - Download helm-config.yaml to configure AGIC:
+
 wget https://raw.githubusercontent.com/Azure/application-gateway-kubernetes-ingress/master/docs/examples/sample-helm-config.yaml -O helm-config.yaml
  
 
 - Edit the helm-config.yaml File
+
 code helm-config.yaml
 
 ----------------------------------------------------------
@@ -72,10 +77,12 @@ code helm-config.yaml
 ----------------------------------------------------------
 
 - Connect to the Kubernetes Cluster
+
 az aks get-credentials --resource-group Dev01-aks02-RG --name az-k8s
 
 
 - Install the Application Gateway ingress controller package:
+
 helm install -f helm-config.yaml application-gateway-kubernetes-ingress/ingress-azure --generate-name
 
 ----------------------------------------------------------
@@ -116,16 +123,17 @@ az network dns record-set a add-record \
 
 ----------------------------------------------------------
 
-$zoneName="aks01-web.iomdev.net"
+$zoneName="aks01-web.domain.net"
 $resourcegroup="Dev01-RG"
 $addcaarecord= @()
 $addcaarecord+=New-AzDnsRecordConfig -Caaflags 0 -CaaTag "issue" -CaaValue "letsencrypt.org"
-$addcaarecord+=New-AzDnsRecordConfig -Caaflags 0 -CaaTag "iodef" -CaaValue "mailto:gbuenaflor@iom.int"
+$addcaarecord+=New-AzDnsRecordConfig -Caaflags 0 -CaaTag "iodef" -CaaValue "<your email>"
 $addcaarecord = New-AzDnsRecordSet -Name "@" -RecordType CAA -ZoneName $zoneName -ResourceGroupName $resourcegroup -Ttl 3600 -DnsRecords ($addcaarecord)
  
 ----------------------------------------------------------
 
 9. Configure Cert-Manager using Azure DNS , this will be use in 02clusterIsuer.yaml file
+
    https://cert-manager.io/docs/configuration/acme/dns01/azuredns/
 
 
