@@ -58,9 +58,7 @@ helm init
 helm repo add application-gateway-kubernetes-ingress https://appgwingress.blob.core.windows.net/ingress-azure-helm-package/
 helm repo update
 
-- Install Ingress Controller Helm Chart
-
-- Download helm-config.yaml to configure AGIC:
+- Install Ingress Controller Helm Chart ,download helm-config.yaml to configure AGIC:
 
 wget https://raw.githubusercontent.com/Azure/application-gateway-kubernetes-ingress/master/docs/examples/sample-helm-config.yaml -O helm-config.yaml
  
@@ -75,14 +73,7 @@ code helm-config.yaml
 
 
 ----------------------------------------------------------
-
-- Connect to the Kubernetes Cluster
-
-az aks get-credentials --resource-group Dev01-aks02-RG --name az-k8s
-
-
-- Install the Application Gateway ingress controller package:
-
+ 
 helm install -f helm-config.yaml application-gateway-kubernetes-ingress/ingress-azure --generate-name
 
 ----------------------------------------------------------
@@ -92,7 +83,9 @@ helm install -f helm-config.yaml application-gateway-kubernetes-ingress/ingress-
 ----------------------------------------------------------
    
 kubectl create namespace cert-manager
+
 helm repo add jetstack https://charts.jetstack.io
+
 helm repo update
 
 kubectl apply --validate=false -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.14/deploy/manifests/00-crds.yaml
@@ -128,6 +121,7 @@ $zoneName="aks01-web.domain.net"
 $resourcegroup="Dev01-RG"
 
 $addcaarecord= @()
+
 $addcaarecord+=New-AzDnsRecordConfig -Caaflags 0 -CaaTag "issue" -CaaValue "letsencrypt.org"
 
 $addcaarecord+=New-AzDnsRecordConfig -Caaflags 0 -CaaTag "iodef" -CaaValue "<your email>"
