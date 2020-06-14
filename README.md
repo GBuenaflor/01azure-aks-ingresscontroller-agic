@@ -112,7 +112,7 @@ kubectl get pods --namespace cert-manager
 
 az network dns record-set a add-record \
     --resource-group Dev01-RG \
-    --zone-name aks01-web.iomdev.net \
+    --zone-name aks01-web.domain.net \
     --record-set-name '*' \
     --ipv4-address 52.224.130.28
 
