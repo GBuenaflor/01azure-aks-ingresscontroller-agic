@@ -8,10 +8,18 @@ High Level Architecture Diagram:
 
 Configuration Flow :
 
-1. Create new AKS Cluster (with Advance Networking) and ApplicationGateway (using Azure Terraform)
-    
 
-2. Create new DNS Zone , edit GoDaddy nameserver (assume you have Domain registered in Godaddy) to utilize Azure Name Servers 
+------------------------------------------------------------------------------
+
+# 1. Create new AKS Cluster (with Advance Networking) using Azure Terraform
+
+ - With AKS
+ - With Application Load Balancer
+ - With Roles
+ 
+------------------------------------------------------------------------------
+
+# 2. Create new DNS Zone , edit GoDaddy nameserver (assume you have Domain registered in Godaddy) to utilize Azure Name Servers 
 
 ------------------------------------------------------------------------------
 
@@ -30,7 +38,7 @@ az network dns zone show \
 
 ------------------------------------------------------------------------------
 
-3. Install Azure AD Pod Identity
+# 3. Install Azure AD Pod Identity
 
 ------------------------------------------------------------------------------
  
@@ -45,7 +53,7 @@ kubectl create -f https://raw.githubusercontent.com/Azure/aad-pod-identity/maste
   
 ------------------------------------------------------------------------------
 
-3.1 Install Helm then install AGIC
+# 3.1 Install Helm then install AGIC
 
 ------------------------------------------------------------------------------
 
@@ -71,7 +79,7 @@ code helm-config.yaml
 
 ------------------------------------------------------------------------------
     
-3.2 Install the Application Gateway ingress controller package:
+# 3.2 Install the Application Gateway ingress controller package:
 
 ------------------------------------------------------------------------------
  
@@ -79,7 +87,7 @@ helm install -f helm-config.yaml application-gateway-kubernetes-ingress/ingress-
 
 ------------------------------------------------------------------------------
 
-3.3 Configure Cert Manager , this is the magic part
+# 3.3 Configure Cert Manager , this is the magic part
 
 ------------------------------------------------------------------------------
    
@@ -100,7 +108,7 @@ kubectl get pods --namespace cert-manager
 
 ------------------------------------------------------------------------------
 
-3.4 Add new A Record in new DNS Zone , Get the Application Gateway Public IP
+# 3.4 Add new A Record in new DNS Zone , Get the Application Gateway Public IP
 
 ------------------------------------------------------------------------------
 
@@ -112,7 +120,7 @@ az network dns record-set a add-record \
 
 ------------------------------------------------------------------------------
 
-3.5 Add CAA  Certificate Authority Authentication using Power Shell
+# 3.5 Add CAA  Certificate Authority Authentication using Power Shell
 
 ------------------------------------------------------------------------------
 
@@ -130,13 +138,19 @@ $addcaarecord = New-AzDnsRecordSet -Name "@" -RecordType CAA -ZoneName $zoneName
  
 ------------------------------------------------------------------------------
 
-4. Configure Cert-Manager using Azure DNS , this will be use in 02clusterIsuer.yaml file
+# 4. Configure Cert-Manager using Azure DNS , this will be use in 02clusterIsuer.yaml file
+
+------------------------------------------------------------------------------
 
    https://cert-manager.io/docs/configuration/acme/dns01/azuredns/
 
 
-4.1 Deploy the Kubernentes Files in order
-    
+------------------------------------------------------------------------------
+
+# 4.1 Deploy the Kubernentes Files in order
+
+------------------------------------------------------------------------------
+
 kubectl apply --namespace default -f "01webandsql.yaml"
 
 kubectl apply --namespace default -f "02clusterIsuer.yaml"
@@ -146,7 +160,11 @@ kubectl apply --namespace default -f "03Ingress.yaml"
 kubectl apply --namespace default -f "04Certificate.yaml"
 
 
-5. Test The Web Application and view the results
+------------------------------------------------------------------------------
+
+# 5. Test The Web Application and view the results
+
+------------------------------------------------------------------------------
  
 
 ![Image description](https://github.com/GBuenaflor/01azure-aks-ingresscontroller-agic/blob/master/GB-AKS-Ingress-AGIC01.png)
