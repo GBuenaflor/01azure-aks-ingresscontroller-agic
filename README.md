@@ -49,7 +49,7 @@ az resource show --resource-group "Dev01-APIG-RG" --name az-k8s --resource-type 
 kubectl create -f https://raw.githubusercontent.com/Azure/aad-pod-identity/master/deploy/infra/deployment.yaml
   
 ------------------------------------------------------------------------------
-# 3.1 Install Helm then install AGIC
+# 3.1 Install Helm and edit the helm-config file
 
 
 - Install Helm, If RBAC is disabled
