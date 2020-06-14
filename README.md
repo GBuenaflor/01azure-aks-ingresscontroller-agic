@@ -98,7 +98,7 @@ helm install cert-manager \
 kubectl get pods --namespace cert-manager
 
 ------------------------------------------------------------------------------
-# 3.4 Add new "A" Record in new DNS Zone , Get the Application Gateway Public IP
+# 3.4 Add new "A" Record in new DNS Zone , utilize the Application Gateway Public IP
 
 
 az network dns record-set a add-record \
@@ -119,12 +119,12 @@ $addcaarecord= @()
 
 $addcaarecord+=New-AzDnsRecordConfig -Caaflags 0 -CaaTag "issue" -CaaValue "letsencrypt.org"
 
-$addcaarecord+=New-AzDnsRecordConfig -Caaflags 0 -CaaTag "iodef" -CaaValue "<your email>"
+$addcaarecord+=New-AzDnsRecordConfig -Caaflags 0 -CaaTag "iodef" -CaaValue "mailto: <your email>"
     
 $addcaarecord = New-AzDnsRecordSet -Name "@" -RecordType CAA -ZoneName $zoneName -ResourceGroupName $resourcegroup -Ttl 3600 -DnsRecords ($addcaarecord)
  
 ------------------------------------------------------------------------------
-# 4. Configure Cert-Manager using Azure DNS , this will be use in 02clusterIsuer.yaml file
+# 4. Configure Cert-Manager using Azure DNS , this will be use in ClusterIsuer yaml file
 
 
    https://cert-manager.io/docs/configuration/acme/dns01/azuredns/
