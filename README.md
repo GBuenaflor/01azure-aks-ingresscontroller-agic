@@ -19,13 +19,13 @@ Configuration Flow :
 
 az network dns zone create \
   --resource-group Dev01-RG \
-  --name aks01-web.iomdev.net
+  --name aks01-web.domain.net
  
 - Query The DNS ZOne
 
 az network dns zone show \
   --resource-group Dev01-aks01-RG \
-  --name aks01-web.iomdev.net \
+  --name aks01-web.domain.net \
   --query nameServers
 
 ------------------------------------------------------------------------------
