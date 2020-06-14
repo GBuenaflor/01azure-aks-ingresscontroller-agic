@@ -17,7 +17,7 @@ Configuration Flow :
  - With Roles
  
 ------------------------------------------------------------------------------
-# 2. Create new DNS Zone , edit GoDaddy nameserver (assume you have Domain registered in Godaddy) to utilize Azure Name Servers 
+# 2. Create new DNS Zone , edit external domain provider nameserver (assume you have Domain registered in GoDaddy) to utilize Azure Name Servers 
 
 
 - Create new DNS Zone
@@ -96,7 +96,7 @@ helm install cert-manager \
 kubectl get pods --namespace cert-manager
 
 ------------------------------------------------------------------------------
-# 3.4 Add new A Record in new DNS Zone , Get the Application Gateway Public IP
+# 3.4 Add new "A" Record in new DNS Zone , Get the Application Gateway Public IP
 
 
 az network dns record-set a add-record \
@@ -106,7 +106,7 @@ az network dns record-set a add-record \
     --ipv4-address 52.224.130.28
 
 ------------------------------------------------------------------------------
-# 3.5 Add CAA  Certificate Authority Authentication using Power Shell
+# 3.5 Add "CAA" Certificate Authority Authentication using Power Shell
 
 
 $zoneName="aks01-web.domain.net"
