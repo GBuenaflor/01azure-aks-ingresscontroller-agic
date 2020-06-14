@@ -45,7 +45,7 @@ kubectl create -f https://raw.githubusercontent.com/Azure/aad-pod-identity/maste
   
 ----------------------------------------------------------
 
-4. Install Helm and Install AGIC using Helm
+3.1 Install Helm and Install AGIC using Helm
 
 ----------------------------------------------------------
 
@@ -71,7 +71,7 @@ code helm-config.yaml
 
 ----------------------------------------------------------
     
-5. Install the Application Gateway ingress controller package:
+3.2 Install the Application Gateway ingress controller package:
 
 
 ----------------------------------------------------------
@@ -87,7 +87,7 @@ helm install -f helm-config.yaml application-gateway-kubernetes-ingress/ingress-
 
 ----------------------------------------------------------
 
-6. Configure Cert Manager
+3.3 Configure Cert Manager
 
 ----------------------------------------------------------
    
@@ -106,7 +106,7 @@ kubectl get pods --namespace cert-manager
 
 ----------------------------------------------------------
 
-7. Add new A Record in new DNS Zone , Get the Application Gateway Public IP
+3.4 Add new A Record in new DNS Zone , Get the Application Gateway Public IP
 
 ----------------------------------------------------------
 
@@ -118,7 +118,7 @@ az network dns record-set a add-record \
 
 ----------------------------------------------------------
 
-8. Add CAA  Certificate Authority Authentication using Power Shell
+3.5 Add CAA  Certificate Authority Authentication using Power Shell
 
 
 ----------------------------------------------------------
@@ -132,19 +132,19 @@ $addcaarecord = New-AzDnsRecordSet -Name "@" -RecordType CAA -ZoneName $zoneName
  
 ----------------------------------------------------------
 
-9. Configure Cert-Manager using Azure DNS , this will be use in 02clusterIsuer.yaml file
+4. Configure Cert-Manager using Azure DNS , this will be use in 02clusterIsuer.yaml file
 
    https://cert-manager.io/docs/configuration/acme/dns01/azuredns/
 
 
-10. Deploy the Kubernentes Files
+4.1 Deploy the Kubernentes Files
     
 kubectl apply --namespace default -f "01webandsql.yaml"
 kubectl apply --namespace default -f "02clusterIsuer.yaml"
 kubectl apply --namespace default -f "03Ingress.yaml"
 
 
-11. Test The Web Application and view the results
+5. Test The Web Application and view the results
  
 
 ![Image description](https://github.com/GBuenaflor/01azure-aks-ingresscontroller-agic/blob/master/GB-AKS-Ingress-AGIC01.png)
