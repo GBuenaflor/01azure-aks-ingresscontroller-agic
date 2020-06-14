@@ -1,0 +1,18 @@
+#-----------------------------------------------------------------
+# Certificate  
+#-----------------------------------------------------------------
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: aks01-web-cert03
+  namespace: default
+spec:
+  secretName: aks01-web-cert03
+ #duration: 24h
+ #renewBefore: 12h
+ #keyEncoding: pkcs8
+  dnsNames:
+  - aks01-web.domain.net
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer

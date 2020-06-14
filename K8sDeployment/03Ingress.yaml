@@ -1,0 +1,38 @@
+#-----------------------------------------------------------------
+# Ingress - https with Domain 
+#----------------------------------------------------------------- 
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: aks01-web
+  annotations: 
+    kubernetes.io/ingress.class: azure/application-gateway
+    appgw.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: letsencrypt
+    cert-manager.io/acme-challenge-type: http01
+    cert-manager.io/acme-challenge-type: dns01
+    
+spec:
+  tls:
+    - hosts:
+      - aks01-web.52-224-130-28.nip.io
+      secretName: aks01-web-cert03
+    - hosts:
+      - gb.aks01-web.domain.net
+      secretName: aks01-web-cert04   
+  rules:  
+  - host: aks01-web.52-224-130-28.nip.io
+    http:
+      paths:
+      - backend:
+          serviceName: aks01-web
+          servicePort: 80
+        path: /
+  - host: gb.aks01-web.domain.net
+    http:
+      paths:
+      - backend:
+          serviceName: aks01-web
+          servicePort: 80
+        path: /
+        
