@@ -36,7 +36,7 @@ az network dns zone show \
   --query nameServers
 
 ------------------------------------------------------------------------------
-# 3. Install Azure AD Pod Identity
+# 3. Install required k8s components, 1st install Azure AD Pod Identity
 
  
 - Check RBAC -Enabled in the AKS Cluster?
@@ -49,7 +49,7 @@ az resource show --resource-group "Dev01-APIG-RG" --name az-k8s --resource-type 
 kubectl create -f https://raw.githubusercontent.com/Azure/aad-pod-identity/master/deploy/infra/deployment.yaml
   
 ------------------------------------------------------------------------------
-# 3.1 Install Helm and edit the helm-config file
+# 3.1 Next, install Helm and edit the helm-config file
 
 
 - Install Helm, If RBAC is disabled
@@ -73,13 +73,13 @@ wget https://raw.githubusercontent.com/Azure/application-gateway-kubernetes-ingr
 code helm-config.yaml
 
 ------------------------------------------------------------------------------    
-# 3.2 Install the Application Gateway ingress controller package:
+# 3.2 Then install the Application Gateway ingress controller package:
 
  
 helm install -f helm-config.yaml application-gateway-kubernetes-ingress/ingress-azure --generate-name
 
 ------------------------------------------------------------------------------
-# 3.3 Configure Cert Manager , this is the magic part
+# 3.3 Configure Cert Manager , this is the M-"agic" part
 
    
 kubectl create namespace cert-manager
@@ -131,7 +131,7 @@ $addcaarecord = New-AzDnsRecordSet -Name "@" -RecordType CAA -ZoneName $zoneName
 
 
 ------------------------------------------------------------------------------
-# 4.1 Deploy the Kubernentes Files in order
+# 4.1 Finally deploy the Kubernentes Files in order
 
 
 kubectl apply --namespace default -f "01webandsql.yaml"
