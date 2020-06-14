@@ -124,10 +124,14 @@ az network dns record-set a add-record \
 ----------------------------------------------------------
 
 $zoneName="aks01-web.domain.net"
+
 $resourcegroup="Dev01-RG"
+
 $addcaarecord= @()
 $addcaarecord+=New-AzDnsRecordConfig -Caaflags 0 -CaaTag "issue" -CaaValue "letsencrypt.org"
+
 $addcaarecord+=New-AzDnsRecordConfig -Caaflags 0 -CaaTag "iodef" -CaaValue "<your email>"
+    
 $addcaarecord = New-AzDnsRecordSet -Name "@" -RecordType CAA -ZoneName $zoneName -ResourceGroupName $resourcegroup -Ttl 3600 -DnsRecords ($addcaarecord)
  
 ----------------------------------------------------------
