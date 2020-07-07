@@ -151,13 +151,13 @@ kubectl apply --namespace default -f "04Certificate.yaml"
 ![Image description](https://github.com/GBuenaflor/01azure-aks-ingresscontroller-agic/blob/master/GB-AKS-Ingress-AGIC01.png)
 
 
-# View the Application Gateway and Azure DNS Zone
+# -  View the Application Gateway and Azure DNS Zone
 
 
 ![Image description](https://github.com/GBuenaflor/01azure-aks-ingresscontroller-agic/blob/master/GB-AKS-Ingress-AGIC02.png)
 
 
-# View the Kubernetes DashBoard (Ingress,Deployments,and Config Maps)
+# -  View the Kubernetes DashBoard (Ingress,Deployments,and Config Maps)
 
 
 ![Image description](https://github.com/GBuenaflor/01azure-aks-ingresscontroller-agic/blob/master/GB-AKS-Ingress-AGIC03.png)
