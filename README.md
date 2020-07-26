@@ -1,5 +1,6 @@
 ----------------------------------------------------------
-# Azure Kubernetes Services (AKS) - Application Gateway Ingress Controller (AGIC) configured with Lets Encrypt Certificate and Azure DNS Zone
+# Azure Kubernetes Services (AKS) - Part 03
+# Application Gateway Ingress Controller (AGIC) configured with Lets Encrypt Certificate and Azure DNS Zone
 
 
 # High Level Architecture Diagram:
