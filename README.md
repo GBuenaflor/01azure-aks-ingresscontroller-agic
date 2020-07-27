@@ -166,4 +166,10 @@ kubectl apply --namespace default -f "04Certificate.yaml"
 
 
 
+</br>
+Link to other Microsoft Azure projects
+https://github.com/GBuenaflor/01azure
+</br>
+
+
 Note: My Favorite > Microsoft Technologies.
