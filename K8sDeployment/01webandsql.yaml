@@ -12,7 +12,7 @@ metadata:
   labels:
     app: aks01-web
 data:
-  db-connection-string: Server=mssql-service-int;Database=Web01DB;User=SA;Password=PASSWORD;
+  db-connection-string: Server=mssql-service-int;Database=Web01DB;User=SA;Password=<Your PASSWORD>;
 #-----------------------------------------------------------------
 # Kubernetes - StorageClass
 #-----------------------------------------------------------------
@@ -87,7 +87,7 @@ metadata:
   name: mssql-deployment
   namespace: default
 spec:
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -109,7 +109,7 @@ spec:
         - name: ACCEPT_EULA
           value: "Y"
         - name: SA_PASSWORD
-          value: "VM12345!@#12345"
+          value: "<Your PASSWORD>"
         volumeMounts:
         - name: mssql-persistent-storage
           mountPath: /var/opt/mssql
