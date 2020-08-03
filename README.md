@@ -3,17 +3,17 @@
 ## Application Gateway Ingress Controller (AGIC) configured with Lets Encrypt Certificate and Azure DNS Zone
 
 
-High Level Architecture Diagram:
+#### High Level Architecture Diagram:
 
 
 ![Image description](https://github.com/GBuenaflor/01azure-aks-ingresscontroller-agic/blob/master/Images/GB-AKS-Ingress-AGIC00A.png)
 
 
-Configuration Flow :
+#### Configuration Flow :
 
 
 ------------------------------------------------------------------------------
-# 1. Create new AKS Cluster (with Advance Networking) using Azure Terraform
+## 1. Create new AKS Cluster (with Advance Networking) using Azure Terraform
 
 ```
 terraform init
@@ -27,16 +27,16 @@ The following Azure service will be created:
 ```
 
 ------------------------------------------------------------------------------
-# 2. Create new DNS Zone , edit external domain provider nameserver (assume you have Domain registered in GoDaddy) to utilize Azure Name Servers 
+## 2. Create new DNS Zone , edit external domain provider nameserver (assume you have Domain registered in GoDaddy) to utilize Azure Name Servers 
 
-## Create new DNS Zone
+### Create new DNS Zone
 ```
 az network dns zone create \
   --resource-group Dev01-RG \
   --name aks01-web.domain.net
 ```
  
-## Query The DNS Zone
+### Query The DNS Zone
 ```
 az network dns zone show \
   --resource-group Dev01-aks01-RG \
@@ -46,31 +46,31 @@ az network dns zone show \
 ```
 
 ------------------------------------------------------------------------------
-# 3. Install required k8s components, 1st install Azure AD Pod Identity
+## 3. Install required k8s components, 1st install Azure AD Pod Identity
 
  
-## Check RBAC -Enabled in the AKS Cluster?
+### Check RBAC -Enabled in the AKS Cluster?
 ```
 az resource show --resource-group "Dev01-APIG-RG" --name az-k8s --resource-type Microsoft.ContainerService/ManagedClusters --query properties.enableRBAC
 ``` 
  
-## Install Azure AD Pod Identity,  If RBAC is disabled
+### Install Azure AD Pod Identity,  If RBAC is disabled
 
 ```
 kubectl create -f https://raw.githubusercontent.com/Azure/aad-pod-identity/master/deploy/infra/deployment.yaml
 ```
   
 ------------------------------------------------------------------------------
-# 3.1 Next, install Helm and edit the helm-config file
+## 3.1 Next, install Helm and edit the helm-config file
 
 
-## Install Helm, If RBAC is disabled
+### Install Helm, If RBAC is disabled
 
 ```
 helm init
 ```
 
-## Add the AGIC Helm repository
+### Add the AGIC Helm repository
 
 ```
 helm repo add application-gateway-kubernetes-ingress https://appgwingress.blob.core.windows.net/ingress-azure-helm-package/
@@ -78,25 +78,25 @@ helm repo add application-gateway-kubernetes-ingress https://appgwingress.blob.c
 helm repo update
 ```
 
-## Install Ingress Controller Helm Chart ,download helm-config.yaml to configure AGIC:
+### Install Ingress Controller Helm Chart ,download helm-config.yaml to configure AGIC:
 
 ```
 wget https://raw.githubusercontent.com/Azure/application-gateway-kubernetes-ingress/master/docs/examples/sample-helm-config.yaml -O helm-config.yaml
  ```
 
-## Edit the helm-config.yaml File
+### Edit the helm-config.yaml File
 ```
 code helm-config.yaml
 ```
 
 ------------------------------------------------------------------------------    
-# 3.2 Then install the Application Gateway ingress controller package:
+### 3.2 Then install the Application Gateway ingress controller package:
 
  ```
 helm install -f helm-config.yaml application-gateway-kubernetes-ingress/ingress-azure --generate-name
 ```
 ------------------------------------------------------------------------------
-# 3.3 Configure Cert Manager , this is the M-"agic" part
+### 3.3 Configure Cert Manager , this is the M-"agic" part
 
  ```  
 kubectl create namespace cert-manager
@@ -113,7 +113,7 @@ helm install cert-manager \
 kubectl get pods --namespace cert-manager
 ```
 ------------------------------------------------------------------------------
-# 3.4 Add new "A" Record in new DNS Zone , utilize the Application Gateway Public IP
+### 3.4 Add new "A" Record in new DNS Zone , utilize the Application Gateway Public IP
 
 ```
 az network dns record-set a add-record \
@@ -124,7 +124,7 @@ az network dns record-set a add-record \
 ```
 
 ------------------------------------------------------------------------------
-# 3.5 Add "CAA" Certificate Authority Authentication using Power Shell
+### 3.5 Add "CAA" Certificate Authority Authentication using Power Shell
 
 ```
 $zoneName="aks01-web.domain.net"
@@ -136,14 +136,14 @@ $addcaarecord = New-AzDnsRecordSet -Name "@" -RecordType CAA -ZoneName $zoneName
  ```
  
 ------------------------------------------------------------------------------
-# 4. Configure Cert-Manager using Azure DNS , this will be use in ClusterIsuer yaml file
+## 4. Configure Cert-Manager using Azure DNS , this will be use in ClusterIsuer yaml file
 
 
    https://cert-manager.io/docs/configuration/acme/dns01/azuredns/
 
 
 ------------------------------------------------------------------------------
-# 4.1 Finally deploy the Kubernentes Files in order
+### 4.1 Finally deploy the Kubernentes Files in order
 
 ```
 kubectl apply --namespace default -f "01webandsql.yaml"
@@ -153,20 +153,20 @@ kubectl apply --namespace default -f "04Certificate.yaml"
 ```
 
 ------------------------------------------------------------------------------
-# 5. Test The Web Application and view the results
+## 5. Test The Web Application and view the results
 
  
 
 ![Image description](https://github.com/GBuenaflor/01azure-aks-ingresscontroller-agic/blob/master/Images/GB-AKS-Ingress-AGIC01.png)
 
 
-## -  View the Application Gateway and Azure DNS Zone
+### -  View the Application Gateway and Azure DNS Zone
 
 
 ![Image description](https://github.com/GBuenaflor/01azure-aks-ingresscontroller-agic/blob/master/Images/GB-AKS-Ingress-AGIC02.png)
 
 
-## -  View the Kubernetes DashBoard (Ingress,Deployments,and Config Maps)
+### -  View the Kubernetes DashBoard (Ingress,Deployments,and Config Maps)
 
 
 ![Image description](https://github.com/GBuenaflor/01azure-aks-ingresscontroller-agic/blob/master/Images/GB-AKS-Ingress-AGIC03.png)
