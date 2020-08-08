@@ -6,7 +6,7 @@
 #### High Level Architecture Diagram:
 
 
-![Image description](https://github.com/GBuenaflor/01azure-aks-ingresscontroller-agic/blob/master/Images/GB-AKS-Ingress-AGIC00A.png)
+![Image description](https://github.com/GBuenaflor/01azure-aks-ingresscontroller-agic/blob/master/Images/GB-AKS-Ingress-AGIC00B.png)
 
 
 #### Configuration Flow :
