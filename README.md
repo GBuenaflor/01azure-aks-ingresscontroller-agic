@@ -138,9 +138,42 @@ $addcaarecord = New-AzDnsRecordSet -Name "@" -RecordType CAA -ZoneName $zoneName
 ------------------------------------------------------------------------------
 ## 4. Configure Cert-Manager using Azure DNS , this will be use in ClusterIsuer yaml file
 
-
-   https://cert-manager.io/docs/configuration/acme/dns01/azuredns/
-
+```
+#-----------------------------------------------------------------
+# Cluster Issuer for web01 
+#
+# Configure Cert-Manager using Azure DNS 
+# https://cert-manager.io/docs/configuration/acme/dns01/azuredns/
+#
+#-----------------------------------------------------------------
+apiVersion: cert-manager.io/v1alpha2
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: <YOUR Email> # IMPORTANT: Replace with a valid email from your organization
+    privateKeySecretRef:
+      name: letsencrypt
+    solvers:
+    - http01:
+        ingress:
+          class: azure/application-gateway # Use Azure Application Gateway 
+    - dns01:
+        azuredns:
+          clientID: xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # AZURE_CERT_MANAGER_SP_APP_ID
+          clientSecretSecretRef:
+          # The following is the secret we created in Kubernetes. Issuer will use this to present challenge to Azure DNS.
+            name: azuredns-config
+            key: client-secret
+          subscriptionID: xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # AZURE_SUBSCRIPTION_ID
+          tenantID: xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # AZURE_TENANT_ID
+          resourceGroupName: Dev01-RG # AZURE_DNS_ZONE_RESOURCE_GROUP
+          hostedZoneName: aks01-web.domain.net #AZURE_DNS_ZONE
+          # Azure Cloud Environment, default to AzurePublicCloud
+          environment: AzurePublicCloud 
+```
 
 ------------------------------------------------------------------------------
 ### 4.1 Finally deploy the Kubernentes Files in order
